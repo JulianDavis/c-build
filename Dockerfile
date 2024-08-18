@@ -1,5 +1,6 @@
 FROM debian:bookworm-slim
 
+# Install Debian packages
 RUN apt-get update                    \
     && DEBIAN_FRONTEND=noninteractive \
         apt-get install -y            \
@@ -11,15 +12,16 @@ RUN apt-get update                    \
             sudo                      \
             unzip                     \
             valgrind                  \
+            wget                      \
             yasm                      \
             zip
 
 # Allow password-less sudo
 RUN echo 'ALL ALL=(ALL:ALL) NOPASSWD:ALL' >> /etc/sudoers
 
-# Install pip dependencies
-COPY ./requirements.txt ./
-RUN pip3 install --break-system-packages -r requirements.txt && rm requirements.txt
+# Install Python packages
+RUN pipx install   \
+        gitlab-art
 
 # Install Unity for unit tests
 RUN wget https://github.com/ThrowTheSwitch/Unity/archive/refs/tags/v2.6.0.tar.gz && \
